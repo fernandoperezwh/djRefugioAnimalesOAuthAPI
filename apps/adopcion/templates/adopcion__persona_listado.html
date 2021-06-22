@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %} Listado de Personas {% endblock %}
+
+{% block content %}
+    <h1>Listado de Personas</h1>
+
+    <div class="bibl-table">
+        <div class="bibl-table-header">
+            <a href="/adopcion/persona/{{ code }}new/">
+                <button type="button" class="btn btn-success"> Crear Persona</button>
+            </a>
+            {% if buscador %}
+            <form method="get" class="d-flex">
+                {{ buscador.q }}
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="bibl-table-body" style="margin-top: 25px;">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Edad</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Domicilio</th>
+                </tr>
+                </thead>
+                <tbody>{% for data in object_list %}
+                    <tr>
+                        <td>{{ data.nombre }}</td>
+                        <td>{{ data.apellidos }}</td>
+                        <td>{{ data.edad }} años</td>
+                        <td>{{ data.telefono }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.domicilio }}</td>
+                        <td><a href="/adopcion/persona/{{ code }}edit/{{ data.id }}" class="btn btn-secondary">Editar</a></td>
+                        <td><a href="/adopcion/persona/{{ code }}delete/{{ data.id }}" class="btn btn-danger">Borrar</a></td>
+                    </tr>{% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock  %}
+

@@ -17,4 +17,12 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^adopcion/',include('apps.adopcion.urls')),
+    url(r'^mascota/',include('apps.mascota.urls')),
+]
+from django.views.static import serve 
+from djRefugioAnimales import settings
+urlpatterns += [
+    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 ]
