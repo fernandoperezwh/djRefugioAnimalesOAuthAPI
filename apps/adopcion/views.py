@@ -81,8 +81,22 @@ def persona_delete(request, _id):
 class PersonaListView(ListView):
     model = Persona
     template_name = "adopcion__persona_listado.html"
+    form_class = SearchForm
 
+    
+    def get_queryset(self):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            cd = form.cleaned_data
+            return self.model.objects.filter(Q(nombre__icontains=cd['q']) | Q(apellidos__icontains=cd['q']))
+        return self.model.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super(PersonaListView, self).get_context_data(**kwargs)
+        context['buscador'] = self.form_class()
+        return context
+
+    
 
 class PersonaCreateView(SuccessMessageMixin, CreateView):
     model = Persona
