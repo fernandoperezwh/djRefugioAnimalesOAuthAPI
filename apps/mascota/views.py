@@ -72,6 +72,20 @@ def vacuna_delete(request, _id):
 class VacunaListView(ListView):
     model = Vacuna
     template_name = "mascota__vacuna_listado.html"
+    form_class = SearchForm
+
+    
+    def get_queryset(self):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            cd = form.cleaned_data
+            return self.model.objects.filter(nombre__icontains=cd['q'])
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(VacunaListView, self).get_context_data(**kwargs)
+        context['buscador'] = self.form_class()
+        return context
 
 
 
@@ -169,6 +183,24 @@ def mascota_delete(request, _id):
 class MascotaListView(ListView):
     model = Mascota
     template_name = "mascota__mascota_listado.html"
+    form_class = SearchForm
+
+    
+    def get_queryset(self):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            cd = form.cleaned_data
+            return self.model.objects.filter(
+                Q(nombre__icontains=cd['q'])             |
+                Q(persona__nombre__icontains=cd['q'])    |
+                Q(persona__apellidos__icontains=cd['q'])
+            )
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(MascotaListView, self).get_context_data(**kwargs)
+        context['buscador'] = self.form_class()
+        return context
 
 
 

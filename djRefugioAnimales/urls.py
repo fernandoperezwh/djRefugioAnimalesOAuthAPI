@@ -14,8 +14,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from apps.mascota.views import MascotaListView
 
 urlpatterns = [
+    url(r'^$', MascotaListView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^adopcion/',include('apps.adopcion.urls')),
     url(r'^mascota/',include('apps.mascota.urls')),
