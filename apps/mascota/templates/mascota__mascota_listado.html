@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load refugio_tags %}
+
+{% block title %} Listado de Mascotas {% endblock %}
+
+{% block content %}
+    <h1>Listado de Mascotas</h1>
+
+    <div class="bibl-table">
+        <div class="bibl-table-header">
+            <a href="/mascota/mascota/{{ code }}new/">
+                <button type="button" class="btn btn-success"> Registrar Mascota</button>
+            </a>
+            {% if buscador %}
+            <form method="get" class="d-flex">
+                {{ buscador.q }}
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="bibl-table-body" style="margin-top: 25px;">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Fotografia</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Edad</th>
+                    <th scope="col">Sexo</th>
+                    <th scope="col">Fecha de rescate</th>
+                    <th scope="col">Asignado a</th>
+                    <th scope="col">Vacunas aplicadas</th>
+                </tr>
+                </thead>
+                <tbody>{% for data in object_list %}
+                    <tr>
+                        <td>{% if data.foto %}
+                            <img src="/media/{{data.foto}}"style="width: 100px;">
+                            {% else %} No image {% endif %}
+                        </td>
+                        <td>{{ data.nombre }}</td>
+                        <td>{{ data.edad }} años</td>
+                        <td>{{ data.sexo }}</td>
+                        <td>{{ data.fecha_rescate }}</td>
+                        <td>{{ data.persona.nombre }} {{ data.persona.apellidos }}</td>
+                        <td> {{data.vacunas.all|join_vacunas}} </td>
+                        <td><a href="/mascota/mascota/{{ code }}edit/{{ data.id }}" class="btn btn-secondary">Editar</a></td>
+                        <td><a href="/mascota/mascota/{{ code }}delete/{{ data.id }}" class="btn btn-danger">Borrar</a></td>
+                    </tr>{% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock  %}
+

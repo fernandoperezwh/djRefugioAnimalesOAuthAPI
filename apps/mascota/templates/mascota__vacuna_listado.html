@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} Listado de Vacunas {% endblock %}
+
+{% block content %}
+    <h1>Listado de Vacunas</h1>
+
+    <div class="bibl-table">
+        <div class="bibl-table-header">
+            <a href="/mascota/vacuna/{{ code }}new/">
+                <button type="button" class="btn btn-success"> Registrar vacuna</button>
+            </a>
+            {% if buscador %}
+            <form method="get" class="d-flex">
+                {{ buscador.q }}
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="bibl-table-body" style="margin-top: 25px;">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                </tr>
+                </thead>
+                <tbody>{% for data in object_list %}
+                    <tr>
+                        <td>{{ data.nombre }}</td>
+                        <td><a href="/mascota/vacuna/{{ code }}edit/{{ data.id }}" class="btn btn-secondary">Editar</a></td>
+                        <td><a href="/mascota/vacuna/{{ code }}delete/{{ data.id }}" class="btn btn-danger">Borrar</a></td>
+                    </tr>{% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock  %}
+
