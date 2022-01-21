@@ -21,6 +21,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^adopcion/',include('apps.adopcion.urls')),
     url(r'^mascota/',include('apps.mascota.urls')),
+
+    url(r'^api/', include('apps.api.urls'))
 ]
 from django.views.static import serve 
 from djRefugioAnimales import settings
