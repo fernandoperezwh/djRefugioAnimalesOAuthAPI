@@ -39,9 +39,10 @@ def persona_list(request):
                 Q(apellidos__icontains=cd['q'])
             )
     return render(request, "adopcion__persona_listado.html", {
-        "code": "fnc/",
         "buscador": form,
         "object_list": queryset,
+        "edit_url": 'persona_edit_fnc',
+        "delete_url": 'persona_delete_fnc',
     })
 
 
@@ -60,7 +61,7 @@ def persona_form(request, _id=None):
                     instance.apellidos if instance else form.cleaned_data.get('apellidos'),
                 )
             )
-            return HttpResponseRedirect( reverse('persona_list') )
+            return HttpResponseRedirect(reverse('persona_list_fnc'))
     else:
         form = PersonaForm(instance=instance) if instance else PersonaForm()
     return render(request, "adopcion__persona_form.html", { "form": form })
@@ -72,7 +73,7 @@ def persona_delete(request, _id):
         request=request,
         instance=instance,
         tpl_name="adopcion__persona_delete.html",
-        redirect=reverse('persona_list'),
+        redirect=reverse('persona_list_fnc'),
         success_message="Se elimino el registro de: <strong>{} {}</strong>".format(instance.nombre, instance.apellidos)
     )
 #endregion
@@ -99,6 +100,8 @@ class PersonaListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(PersonaListView, self).get_context_data(**kwargs)
         context['buscador'] = self.form_class()
+        context['edit_url'] = 'persona_edit_cbv'
+        context['delete_url'] = 'persona_delete_cbv'
         return context
 
     
@@ -151,7 +154,8 @@ class PersonaApiListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonaApiListView, self).get_context_data(**kwargs)
-        context['code'] = "api/",
+        context['edit_url'] = 'persona_edit_api'
+        context['delete_url'] = 'persona_delete_api'
         context['buscador'] = self.form_class()
         return context
 

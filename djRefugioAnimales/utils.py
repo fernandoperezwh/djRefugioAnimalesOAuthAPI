@@ -19,5 +19,5 @@ def generic_delete(request, instance, tpl_name, redirect, success_message=None):
         instance.delete()
         messages.success(request, success_message or DEFAULT_SUCCESS_MESSAGE)
         return HttpResponseRedirect( redirect )
-    return render(request, tpl_name, { "object": instance })
+    return render(request, tpl_name, { "object": instance, 'redirect': redirect })
     

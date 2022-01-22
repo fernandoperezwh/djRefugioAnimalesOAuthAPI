@@ -29,7 +29,8 @@ def vacuna_list(request):
         else:
             queryset = Vacuna.objects.filter(nombre__icontains=cd['q'])
     return render(request, "mascota__vacuna_listado.html", {
-        "code": "fnc/",
+        'edit_url': 'persona_edit_fnc',
+        'delete_url': 'persona_delete_fnc',
         "buscador": form,
         "object_list": queryset,
     })
@@ -48,7 +49,7 @@ def vacuna_form(request, _id=None):
                     instance.nombre if instance else form.cleaned_data.get('nombre'),
                 )
             )
-            return HttpResponseRedirect( reverse('vacuna_list') )
+            return HttpResponseRedirect(reverse('vacuna_list_fnc'))
     else:
         form = VacunaForm(instance=instance) if instance else VacunaForm()
     return render(request, "mascota__vacuna_form.html", { "form":   form })
@@ -60,7 +61,7 @@ def vacuna_delete(request, _id):
         request=request,
         instance=instance,
         tpl_name="mascota__vacuna_delete.html",
-        redirect=reverse('vacuna_list'),
+        redirect=reverse('vacuna_list_fnc'),
         success_message="Se elimino el registro de la vacuna: <strong>{}</strong>".format(instance.nombre)
     )
 #endregion
@@ -85,6 +86,8 @@ class VacunaListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(VacunaListView, self).get_context_data(**kwargs)
         context['buscador'] = self.form_class()
+        context['edit_url'] = 'vacuna_edit_cbv'
+        context['delete_url'] = 'vacuna_delete_cbv'
         return context
 
 
@@ -140,7 +143,8 @@ def mascota_list(request):
                 Q(persona__apellidos__icontains=cd['q'])
             )
     return render(request, "mascota__mascota_listado.html", {
-        "code": "fnc/",
+        'edit_url': 'mascota_edit_fnc',
+        'delete_url': 'mascota_delete_fnc',
         "buscador": form,
         "object_list": queryset,
     })
@@ -159,7 +163,7 @@ def mascota_form(request, _id=None):
                     instance.nombre if instance else form.cleaned_data.get('nombre'),
                 )
             )
-            return HttpResponseRedirect( reverse('mascota_list') )
+            return HttpResponseRedirect(reverse('mascota_list_fnc'))
     else:
         form = MascotaForm(instance=instance) if instance else MascotaForm()
     return render(request, "mascota__mascota_form.html", { "form":   form })
@@ -171,7 +175,7 @@ def mascota_delete(request, _id):
         request=request,
         instance=instance,
         tpl_name="mascota__mascota_delete.html",
-        redirect=reverse('mascota_list'),
+        redirect=reverse('mascota_list_fnc'),
         success_message="Se elimino el registro de la mascota: <strong>{}</strong>".format(instance.nombre)
     )
 #endregion
@@ -200,6 +204,8 @@ class MascotaListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(MascotaListView, self).get_context_data(**kwargs)
         context['buscador'] = self.form_class()
+        context['edit_url'] = 'mascota_edit_cbv'
+        context['delete_url'] = 'mascota_delete_cbv'
         return context
 
 
