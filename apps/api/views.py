@@ -1,4 +1,5 @@
 # django packages
+from django.db.models import Q
 from django.http import Http404
 # django rest framework packages
 from rest_framework import status
@@ -12,6 +13,11 @@ from apps.adopcion.serializers import PersonaSerializer, EditPersonaSerializer
 class PersonaList(APIView):
     def get(self, request):
         queryset = Persona.objects.all()
+        search_query = request.query_params.get('q')
+        if search_query:
+            args = [Q(nombre__contains=search_query) | Q(apellidos__contains=search_query) |
+                    Q(email__contains=search_query)]
+            queryset = queryset.filter(*args)
         serializer = PersonaSerializer(queryset, many=True)
         return Response(serializer.data)
 
