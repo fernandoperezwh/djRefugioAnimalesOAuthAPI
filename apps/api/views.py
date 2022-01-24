@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 # local packages
 from apps.adopcion.models import Persona
-from apps.mascota.models import Vacuna
+from apps.mascota.models import Vacuna, Mascota
 from apps.adopcion.serializers import PersonaSerializer, EditPersonaSerializer
-from apps.mascota.serializers import VacunaSerializer, EditVacunaSerializer
+from apps.mascota.serializers import VacunaSerializer, EditVacunaSerializer, MascotaSerializer, EditMascotaSerializer
 
 
 # region Persona views
@@ -39,20 +39,20 @@ class PersonaDetail(APIView):
             raise Http404
 
     def get(self, request, pk):
-        entity = self.get_object(pk)
-        serializer = PersonaSerializer(entity)
+        instance = self.get_object(pk)
+        serializer = PersonaSerializer(instance)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        entity = self.get_object(pk)
-        serializer = EditPersonaSerializer(entity, data=request.data)
+        instance = self.get_object(pk)
+        serializer = EditPersonaSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        entity = self.get_object(pk)
-        entity.delete()
+        instance = self.get_object(pk)
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 # endregion
 
@@ -82,19 +82,66 @@ class VacunaDetail(APIView):
             raise Http404
 
     def get(self, request, pk):
-        entity = self.get_object(pk)
-        serializer = VacunaSerializer(entity)
+        instance = self.get_object(pk)
+        serializer = VacunaSerializer(instance)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        entity = self.get_object(pk)
-        serializer = EditVacunaSerializer(entity, data=request.data)
+        instance = self.get_object(pk)
+        serializer = EditVacunaSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        entity = self.get_object(pk)
-        entity.delete()
+        instance = self.get_object(pk)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+# endregion
+
+
+# region Mascota views
+class MascotaList(APIView):
+    def get(self, request):
+        queryset = Mascota.objects.prefetch_related('persona').all()
+        search_query = request.query_params.get('q')
+        if search_query:
+            queryset = queryset.filter(
+                nombre__contains=search_query,
+                persona__nombre__contains=search_query,
+                persona__apellidos__contains=search_query,
+            )
+        serializer = MascotaSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = EditMascotaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MascotaDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Mascota.objects.get(pk=pk)
+        except Mascota.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = MascotaSerializer(instance)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = EditMascotaSerializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        instance = self.get_object(pk)
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 # endregion

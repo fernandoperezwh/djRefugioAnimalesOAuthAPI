@@ -4,13 +4,16 @@ from django.conf.urls import url
 from apps.api import views
 
 urlpatterns = [
-    # endpoints persona
+    # region endpoints persona
     url(r'^persona/$', views.PersonaList.as_view()),
     url(r'^persona/(?P<pk>\d+)/$', views.PersonaDetail.as_view()),
-
-    # endpoints vacuna
+    # endregion
+    # region endpoints vacuna
     url(r'^vacuna/$', views.VacunaList.as_view()),
     url(r'^vacuna/(?P<pk>\d+)/$', views.VacunaDetail.as_view()),
-
-    # endpoints mascota
+    # enregion
+    # region endpoints mascota
+    url(r'^mascota/$', views.MascotaList.as_view()),
+    url(r'^mascota/(?P<pk>\d+)/$', views.MascotaDetail.as_view()),
+    # endregion
 ]
