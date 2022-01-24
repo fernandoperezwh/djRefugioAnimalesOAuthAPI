@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.http import Http404
 # django rest framework packages
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 # local packages
@@ -144,4 +145,37 @@ class MascotaDetail(APIView):
         instance = self.get_object(pk)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+# endregion
+
+
+
+# region protected resources
+class PermissionMixin():
+    def get_permissions(self):
+        permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
+
+class PersonaPrivateList(PermissionMixin, PersonaList):
+    pass
+
+
+class VacunaPrivateList(PermissionMixin, VacunaList):
+    pass
+
+
+class MascotaPrivateList(PermissionMixin, MascotaList):
+    pass
+
+
+class PersonaPrivateDetail(PermissionMixin, PersonaDetail):
+    pass
+
+
+class VacunaPrivateDetail(PermissionMixin, VacunaDetail):
+    pass
+
+
+class MascotaPrivateDetail(PermissionMixin, MascotaDetail):
+    pass
 # endregion
