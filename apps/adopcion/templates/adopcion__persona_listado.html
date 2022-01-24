@@ -7,7 +7,7 @@
 
     <div class="bibl-table">
         <div class="bibl-table-header">
-            <a href="/adopcion/persona/{{ code }}new/">
+            <a href="{% url create_url %}">
                 <button type="button" class="btn btn-success"> Crear Persona</button>
             </a>
             {% if buscador %}

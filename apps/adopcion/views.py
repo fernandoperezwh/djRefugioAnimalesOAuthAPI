@@ -6,24 +6,19 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
 # third party packages
 import requests
 from requests import ConnectionError, ConnectTimeout
-
 # local imports
 from apps.adopcion.models import Persona
 from apps.adopcion.forms import PersonaForm
 from djRefugioAnimales.forms import SearchForm
-from djRefugioAnimales.utils import generic_delete
+from djRefugioAnimales.utils import generic_delete, generic_api_delete
 
 
 # Create your views here.
 def adopcion_index(request):
     return HttpResponse("Hello world")
-
-
-
 
 
 #region persona - function based views
@@ -41,6 +36,7 @@ def persona_list(request):
     return render(request, "adopcion__persona_listado.html", {
         "buscador": form,
         "object_list": queryset,
+        'create_url': 'persona_new_fnc',
         "edit_url": 'persona_edit_fnc',
         "delete_url": 'persona_delete_fnc',
     })
@@ -79,17 +75,12 @@ def persona_delete(request, _id):
 #endregion
 
 
-
-
-
-
 #region persona - class based views
 class PersonaListView(ListView):
     model = Persona
     template_name = "adopcion__persona_listado.html"
     form_class = SearchForm
 
-    
     def get_queryset(self):
         form = self.form_class(self.request.GET)
         if form.is_valid():
@@ -100,11 +91,11 @@ class PersonaListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(PersonaListView, self).get_context_data(**kwargs)
         context['buscador'] = self.form_class()
+        context['create_url'] = 'persona_new_cbv'
         context['edit_url'] = 'persona_edit_cbv'
         context['delete_url'] = 'persona_delete_cbv'
         return context
 
-    
 
 class PersonaCreateView(SuccessMessageMixin, CreateView):
     model = Persona
@@ -114,14 +105,12 @@ class PersonaCreateView(SuccessMessageMixin, CreateView):
     success_message = "Se agrego correctamente la persona <strong>%(nombre)s %(apellidos)s</strong>"
 
 
-
 class PersonaUpdateView(SuccessMessageMixin, UpdateView):
     model = Persona
     form_class = PersonaForm
     template_name = "adopcion__persona_form.html"
     success_url = reverse_lazy("persona_list_cbv")
     success_message = "Se modifico correctamente la persona <strong>%(nombre)s %(apellidos)s</strong>"
-
 
 
 class PersonaDeleteView(SuccessMessageMixin, DeleteView):
@@ -154,6 +143,7 @@ class PersonaApiListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonaApiListView, self).get_context_data(**kwargs)
+        context['create_url'] = 'persona_new_api'
         context['edit_url'] = 'persona_edit_api'
         context['delete_url'] = 'persona_delete_api'
         context['buscador'] = self.form_class()
@@ -175,6 +165,7 @@ class PersonaApiListView(ListView):
 
 
 def persona_form_api(request, _id=None):
+    RETURN_URL = 'persona_list_api'
     initial = {}
     # Se verifica la existencia
     if _id:
@@ -186,7 +177,7 @@ def persona_form_api(request, _id=None):
         except (ConnectionError, ConnectTimeout) as err:
             messages.error(request, 'Un error a ocurrido consultando los datos de la persona con id: {id}'
                                     ''.format(id=_id))
-            return HttpResponseRedirect(reverse('persona_list_api'))
+            return HttpResponseRedirect(reverse(RETURN_URL))
 
     form = PersonaForm(initial=initial) if initial else PersonaForm()
 
@@ -194,39 +185,66 @@ def persona_form_api(request, _id=None):
     if request.method == "POST":
         form = PersonaForm(request.POST, initial=initial)
         if form.is_valid():
-            api_error = False
             try:
                 if initial:
+                    # Se actualiza registro de persona
                     response = requests.put('http://localhost:8000/api/persona/{id}/'.format(id=_id),
                                             data=form.cleaned_data)
                 else:
-                    # TODO: Crear persona
-                    pass
-
-                # Se verifica si la api pudo actualizar los datos de la persona
-                if not response or response.status_code != 200:
-                    api_error = True
-                    messages.error(request, 'Un error ha ocurrido intentando aplicar la accion sobre la persona '
-                                            '<strong>{first_name} {last_name}</strong>'
-                                            ''.format(first_name=form.cleaned_data.get('nombre'),
-                                                      last_name=form.cleaned_data.get('apellidos')))
+                    # Se crea registro de persona
+                    response = requests.post('http://localhost:8000/api/persona/', data=form.cleaned_data)
 
             except (ConnectionError, ConnectTimeout) as err:
-                api_error = True
                 messages.error(request, 'Un error desconocido ha ocurrido intentando aplicar la accion sobre la '
                                         'persona <strong>{first_name} {last_name}</strong>'
                                         ''.format(first_name=form.cleaned_data.get('nombre'),
                                                   last_name=form.cleaned_data.get('apellidos')))
+                return HttpResponseRedirect(reverse(RETURN_URL))
 
+            # Se verifica si la api pudo actualizar los datos de la persona
+            if response.status_code not in (200, 201):
+                messages.error(request, 'Un error ha ocurrido intentando aplicar la accion sobre la persona '
+                                        '<strong>{first_name} {last_name}</strong>'
+                                        ''.format(first_name=form.cleaned_data.get('nombre'),
+                                                  last_name=form.cleaned_data.get('apellidos')))
+                return HttpResponseRedirect(reverse(RETURN_URL))
             # Si no ocurrio ningun error durante el intento de crear o eliminar, se manda el mensaje de exito
-            if not api_error:
-                messages.success(request, 'Se ha realizado con exito la accion sobre la persona '
-                                          '<strong>{first_name} {last_name}</strong>'
-                                          ''.format(first_name=form.cleaned_data.get('nombre'),
-                                                    last_name=form.cleaned_data.get('apellidos')))
-            return HttpResponseRedirect(reverse('persona_list_api'))
+            messages.success(request, 'Se ha realizado con exito la accion sobre la persona <strong>{first_name} '
+                                      '{last_name}</strong>'
+                                      ''.format(first_name=form.cleaned_data.get('nombre'),
+                                                last_name=form.cleaned_data.get('apellidos')))
+            return HttpResponseRedirect(reverse(RETURN_URL))
 
     return render(request, "adopcion__persona_form.html", {
         "form": form,
     })
+
+
+def persona_delete_api(request, _id):
+    RETURN_URL = 'persona_list_api'
+    ENDPOINT = 'http://localhost:8000/api/persona/{id}'.format(id=_id)
+    # Se intenta obtener el registro a eliminar
+    try:
+        response = requests.get(ENDPOINT.format(id=_id))
+        if response.status_code != 200:
+            raise Http404
+        instance = response.json()
+    except (ConnectionError, ConnectTimeout) as err:
+        messages.error(request, 'Un error a ocurrido consultando los datos de la persona con id: {id}'
+                                ''.format(id=_id))
+        return HttpResponseRedirect(reverse(RETURN_URL))
+    # Se manda a llamar las instrucciones genericas para eliminar en base al funcionamiento del api
+    return generic_api_delete(
+        request=request,
+        endpoint=ENDPOINT,
+        instance=instance,
+        tpl_name="adopcion__persona_delete.html",
+        redirect=reverse(RETURN_URL),
+        custom_messages={
+            'success': 'Se elimino el registro de: <strong>{} {}</strong>'
+                       ''.format(instance.get('nombre'), instance.get('apellidos')),
+            'error': 'Un error ha ocurrido intentando eliminar el registro de: <strong>{} {}</strong>'
+                     ''.format(instance.get('nombre'), instance.get('apellidos')),
+        }
+    )
 # endregion

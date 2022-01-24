@@ -12,16 +12,14 @@ from requests import ConnectionError, ConnectTimeout
 from apps.mascota.models import Vacuna, Mascota
 from apps.mascota.forms import VacunaForm, MascotaForm
 from djRefugioAnimales.forms import SearchForm
-from djRefugioAnimales.utils import generic_delete
+from djRefugioAnimales.utils import generic_delete, generic_api_delete
+
 
 # Create your views here.
 def mascotas_index(request):
     return HttpResponse("Hello world")
 
 
-"""
-    Vacunas
-"""
 #region Vacuna - function based views
 def vacuna_list(request):
     form, queryset = SearchForm(request.GET), None
@@ -71,8 +69,6 @@ def vacuna_delete(request, _id):
 #endregion
 
 
-
-
 #region Vacuna - class based views
 class VacunaListView(ListView):
     model = Vacuna
@@ -96,7 +92,6 @@ class VacunaListView(ListView):
         return context
 
 
-
 class VacunaCreateView(SuccessMessageMixin, CreateView):
     model = Vacuna
     form_class = VacunaForm
@@ -105,14 +100,12 @@ class VacunaCreateView(SuccessMessageMixin, CreateView):
     success_message = "Se agrego correctamente la vacuna <strong>%(nombre)s</strong>"
 
 
-
 class VacunaUpdateView(SuccessMessageMixin, UpdateView):
     model = Vacuna
     form_class = VacunaForm
     template_name = "mascota__vacuna_form.html"
     success_url = reverse_lazy("vacuna_list_cbv")
     success_message = "Se modifico correctamente la vacuna <strong>%(nombre)s</strong>"
-
 
 
 class VacunaDeleteView(SuccessMessageMixin, DeleteView):
@@ -167,6 +160,7 @@ class VacunaApiListView(ListView):
 
 
 def vacuna_form_api(request, _id=None):
+    RETURN_URL = 'vacuna_list_api'
     initial = {}
     # Se verifica la existencia
     if _id:
@@ -186,35 +180,31 @@ def vacuna_form_api(request, _id=None):
     if request.method == "POST":
         form = VacunaForm(request.POST, initial=initial)
         if form.is_valid():
-            api_error = False
             try:
                 if initial:
+                    # Editar registro de una vacuna
                     response = requests.put('http://localhost:8000/api/vacuna/{id}/'.format(id=_id),
                                             data=form.cleaned_data)
                 else:
-                    # TODO: Crear vacuna desde api
-                    messages.warning(request, 'Opcion de crear vacuna desde API se encuentra pendiente de desarrollo')
-                    return HttpResponseRedirect(reverse('vacuna_list_api'))
-
-                # Se verifica si la api pudo actualizar/crear los datos de la vacuna
-                if not response or response.status_code != 200:
-                    api_error = True
-                    messages.error(request, 'Un error ha ocurrido intentando aplicar la accion sobre la vacuna '
-                                            '<strong>{name}</strong>'
-                                            ''.format(name=form.cleaned_data.get('nombre')))
+                    # Crear registro de una vacuna
+                    response = requests.post('http://localhost:8000/api/vacuna/', data=form.cleaned_data)
 
             except (ConnectionError, ConnectTimeout) as err:
-                api_error = True
                 messages.error(request, 'Un error desconocido ha ocurrido intentando aplicar la accion sobre la '
                                         'vacuna <strong>{name}</strong>'
                                         ''.format(name=form.cleaned_data.get('nombre')))
+                return HttpResponseRedirect(reverse(RETURN_URL))
 
+            # Se verifica si la api pudo actualizar/crear los datos de la vacuna
+            if response.status_code not in (200, 201):
+                messages.error(request, 'Un error ha ocurrido intentando aplicar la accion sobre la vacuna '
+                                        '<strong>{name}</strong>'
+                                        ''.format(name=form.cleaned_data.get('nombre')))
+                return HttpResponseRedirect(reverse(RETURN_URL))
             # Si no ocurrio ningun error durante el intento de crear o eliminar, se manda el mensaje de exito
-            if not api_error:
-                messages.success(request, 'Se ha realizado con exito la accion sobre la vacuna '
-                                          '<strong>{name}</strong>'
-                                          ''.format(name=form.cleaned_data.get('nombre')))
-            return HttpResponseRedirect(reverse('vacuna_list_api'))
+            messages.success(request, 'Se ha realizado con exito la accion sobre la vacuna <strong>{name}</strong>'
+                                      ''.format(name=form.cleaned_data.get('nombre')))
+            return HttpResponseRedirect(reverse(RETURN_URL))
 
     return render(request, "mascota__vacuna_form.html", {
         "form": form,
@@ -222,15 +212,34 @@ def vacuna_form_api(request, _id=None):
 
 
 def vacuna_delete_api(request, _id):
-    # TODO: Eliminar vacuna desde api
-    messages.warning(request, 'Opcion de eliminar vacuna desde api se encuentra pendiente de desarrollo')
-    return HttpResponseRedirect(reverse('vacuna_list_api'))
+    RETURN_URL = 'vacuna_list_api'
+    ENDPOINT = 'http://localhost:8000/api/vacuna/{id}'.format(id=_id)
+    # Se intenta obtener el registro a eliminar
+    try:
+        response = requests.get(ENDPOINT.format(id=_id))
+        if response.status_code != 200:
+            raise Http404
+        instance = response.json()
+    except (ConnectionError, ConnectTimeout) as err:
+        messages.error(request, 'Un error a ocurrido consultando los datos de la vacuna con id: {id}'
+                                ''.format(id=_id))
+        return HttpResponseRedirect(reverse(RETURN_URL))
+    # Se manda a llamar las instrucciones genericas para eliminar en base al funcionamiento del api
+    return generic_api_delete(
+        request=request,
+        endpoint=ENDPOINT,
+        instance=instance,
+        tpl_name="mascota__vacuna_delete.html",
+        redirect=reverse(RETURN_URL),
+        custom_messages={
+            'success': 'Se elimino el registro de: <strong>{}</strong>'.format(instance.get('nombre')),
+            'error': 'Un error ha ocurrido intentando eliminar el registro de: <strong>{}</strong>'
+                     ''.format(instance.get('nombre')),
+        }
+    )
 # endregion
 
 
-"""
-    Mascotas
-"""
 #region Mascota - function based views
 def mascota_list(request):
     form, queryset = SearchForm(request.GET), None
@@ -283,8 +292,6 @@ def mascota_delete(request, _id):
 #endregion
 
 
-
-
 #region Mascota - class based views
 class MascotaListView(ListView):
     model = Mascota
@@ -311,7 +318,6 @@ class MascotaListView(ListView):
         return context
 
 
-
 class MascotaCreateView(SuccessMessageMixin, CreateView):
     model = Mascota
     form_class = MascotaForm
@@ -320,14 +326,12 @@ class MascotaCreateView(SuccessMessageMixin, CreateView):
     success_message = "Se agrego correctamente la mascota <strong>%(nombre)s</strong>"
 
 
-
 class MascotaUpdateView(SuccessMessageMixin, UpdateView):
     model = Mascota
     form_class = MascotaForm
     template_name = "mascota__mascota_form.html"
     success_url = reverse_lazy("mascota_list_cbv")
     success_message = "Se modifico correctamente la mascota <strong>%(nombre)s</strong>"
-
 
 
 class MascotaDeleteView(SuccessMessageMixin, DeleteView):
