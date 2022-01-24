@@ -18,10 +18,10 @@ urlpatterns = [
     url(r'^vacuna/delete/(?P<pk>[0-9]+)/$', views.VacunaDeleteView.as_view(), name="vacuna_delete_cbv"),
     #endregion
     #region Vacunas - api views
-    url(r'^vacuna/api/list/$', views.vacuna_list, name="vacuna_list_api"),
-    url(r'^vacuna/api/new/$', views.vacuna_form, name="vacuna_new_api"),
-    url(r'^vacuna/api/edit/(\d+)/$', views.vacuna_form, name="vacuna_edit_api"),
-    url(r'^vacuna/api/delete/(\d+)/$', views.vacuna_delete, name="vacuna_delete_api"),
+    url(r'^vacuna/api/list/$', views.VacunaApiListView.as_view(), name="vacuna_list_api"),
+    url(r'^vacuna/api/new/$', views.vacuna_form_api, name="vacuna_new_api"),
+    url(r'^vacuna/api/edit/(\d+)/$', views.vacuna_form_api, name="vacuna_edit_api"),
+    url(r'^vacuna/api/delete/(\d+)/$', views.vacuna_delete_api, name="vacuna_delete_api"),
     #endregion
 
 
