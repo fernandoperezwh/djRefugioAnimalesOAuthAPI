@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^adopcion/',include('apps.adopcion.urls')),
     url(r'^mascota/',include('apps.mascota.urls')),
 
-    url(r'^api/', include('apps.api.urls'))
+    url(r'^api/public/', include('apps.api.urls'))
 ]
 from django.views.static import serve 
 from djRefugioAnimales import settings

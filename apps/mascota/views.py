@@ -124,7 +124,7 @@ class VacunaDeleteView(SuccessMessageMixin, DeleteView):
 
 # region Vacuna - api views
 class VacunaApiListView(ListView):
-    endpoint = 'http://localhost:8000/api/vacuna/'
+    endpoint = 'http://localhost:8000/api/public/vacuna/'
     model = Vacuna
     template_name = "mascota__vacuna_listado.html"
     form_class = SearchForm
@@ -165,7 +165,7 @@ def vacuna_form_api(request, _id=None):
     # Se verifica la existencia
     if _id:
         try:
-            response = requests.get('http://localhost:8000/api/vacuna/{id}'.format(id=_id))
+            response = requests.get('http://localhost:8000/api/public/vacuna/{id}'.format(id=_id))
             if response.status_code != 200:
                 raise Http404
             initial = response.json()
@@ -183,11 +183,11 @@ def vacuna_form_api(request, _id=None):
             try:
                 if initial:
                     # Editar registro de una vacuna
-                    response = requests.put('http://localhost:8000/api/vacuna/{id}/'.format(id=_id),
+                    response = requests.put('http://localhost:8000/api/public/vacuna/{id}/'.format(id=_id),
                                             data=form.cleaned_data)
                 else:
                     # Crear registro de una vacuna
-                    response = requests.post('http://localhost:8000/api/vacuna/', data=form.cleaned_data)
+                    response = requests.post('http://localhost:8000/api/public/vacuna/', data=form.cleaned_data)
 
             except (ConnectionError, ConnectTimeout) as err:
                 messages.error(request, 'Un error desconocido ha ocurrido intentando aplicar la accion sobre la '
@@ -213,7 +213,7 @@ def vacuna_form_api(request, _id=None):
 
 def vacuna_delete_api(request, _id):
     RETURN_URL = 'vacuna_list_api'
-    ENDPOINT = 'http://localhost:8000/api/vacuna/{id}'.format(id=_id)
+    ENDPOINT = 'http://localhost:8000/api/public/vacuna/{id}'.format(id=_id)
     # Se intenta obtener el registro a eliminar
     try:
         response = requests.get(ENDPOINT.format(id=_id))

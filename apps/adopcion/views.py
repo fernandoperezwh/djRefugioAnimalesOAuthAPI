@@ -129,7 +129,7 @@ class PersonaDeleteView(SuccessMessageMixin, DeleteView):
 
 # region persona - API Clase based views
 class PersonaApiListView(ListView):
-    endpoint = 'http://localhost:8000/api/persona/'
+    endpoint = 'http://localhost:8000/api/public/persona/'
     model = Persona
     template_name = "adopcion__persona_listado.html"
     form_class = SearchForm
@@ -170,7 +170,7 @@ def persona_form_api(request, _id=None):
     # Se verifica la existencia
     if _id:
         try:
-            response = requests.get('http://localhost:8000/api/persona/{id}'.format(id=_id))
+            response = requests.get('http://localhost:8000/api/public/persona/{id}'.format(id=_id))
             if response.status_code != 200:
                 raise Http404
             initial = response.json()
@@ -188,11 +188,11 @@ def persona_form_api(request, _id=None):
             try:
                 if initial:
                     # Se actualiza registro de persona
-                    response = requests.put('http://localhost:8000/api/persona/{id}/'.format(id=_id),
+                    response = requests.put('http://localhost:8000/api/public/persona/{id}/'.format(id=_id),
                                             data=form.cleaned_data)
                 else:
                     # Se crea registro de persona
-                    response = requests.post('http://localhost:8000/api/persona/', data=form.cleaned_data)
+                    response = requests.post('http://localhost:8000/api/public/persona/', data=form.cleaned_data)
 
             except (ConnectionError, ConnectTimeout) as err:
                 messages.error(request, 'Un error desconocido ha ocurrido intentando aplicar la accion sobre la '
@@ -222,7 +222,7 @@ def persona_form_api(request, _id=None):
 
 def persona_delete_api(request, _id):
     RETURN_URL = 'persona_list_api'
-    ENDPOINT = 'http://localhost:8000/api/persona/{id}'.format(id=_id)
+    ENDPOINT = 'http://localhost:8000/api/public/persona/{id}'.format(id=_id)
     # Se intenta obtener el registro a eliminar
     try:
         response = requests.get(ENDPOINT.format(id=_id))
