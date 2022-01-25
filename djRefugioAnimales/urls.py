@@ -19,7 +19,6 @@ from django.contrib import admin
 # third party packages
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 # local packages
-from apps.api.views import VerifyToken
 from apps.mascota.views import MascotaListView
 
 urlpatterns = [
