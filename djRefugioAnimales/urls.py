@@ -1,3 +1,4 @@
+# coding=utf-8
 """djRefugioAnimales URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -18,6 +19,7 @@ from django.contrib import admin
 # third party packages
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 # local packages
+from apps.api.views import VerifyToken
 from apps.mascota.views import MascotaListView
 
 urlpatterns = [
@@ -26,11 +28,9 @@ urlpatterns = [
     # endregion
 
     # region third party urls
-    url(r'^api/auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # XXX: Las siguientes dos rutas 'refresh' y 'verify' parece que no funcionan como esperaba
-    url(r'^api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # [OPCIONAL] allow API users to verify HMAC-signed tokens without having access to your signing key
-    url(r'^api/auth/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    url(r'^api/auth/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^api/auth/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^api/auth/verify/$', TokenVerifyView.as_view(), name='token_verify'),
     # endregion
 
     # region local urls
