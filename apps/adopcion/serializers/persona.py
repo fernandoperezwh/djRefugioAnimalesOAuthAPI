@@ -18,21 +18,21 @@ class PersonaSerializer(serializers.ModelSerializer):
 
 class EditPersonaSerializer(serializers.Serializer):
     nombre = serializers.CharField(
-        max_length=100,
+        max_length=50,
         trim_whitespace=True
     )
     apellidos = serializers.CharField(
-        max_length=100,
+        max_length=70,
         trim_whitespace=True
     )
     edad = serializers.IntegerField(
-        min_value=18,
+        min_value=10,
         max_value=150
     )
     telefono = serializers.CharField(
         required=False,
         min_length=8,
-        max_length=10,
+        max_length=12,
         trim_whitespace=True
     )
     email = serializers.EmailField(
