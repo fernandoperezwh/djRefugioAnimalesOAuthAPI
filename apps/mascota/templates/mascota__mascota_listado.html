@@ -45,8 +45,8 @@
                         <td>{{ data.fecha_rescate }}</td>
                         <td>{{ data.persona.nombre }} {{ data.persona.apellidos }}</td>
                         <td> {{data.vacunas.all|join_vacunas}} </td>
-                        <td><a href="/mascota/mascota/{{ code }}edit/{{ data.id }}" class="btn btn-secondary">Editar</a></td>
-                        <td><a href="/mascota/mascota/{{ code }}delete/{{ data.id }}" class="btn btn-danger">Borrar</a></td>
+                        <td><a href="{% url edit_url data.id %}" class="btn btn-secondary">Editar</a></td>
+                        <td><a href="{% url delete_url data.id %}" class="btn btn-danger">Borrar</a></td>
                     </tr>{% endfor %} 
                 </tbody>
             </table>

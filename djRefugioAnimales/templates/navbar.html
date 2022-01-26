@@ -7,28 +7,37 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="/adopcion/persona/fnc/list/" tabindex="-1" aria-disabled="true">Personas</a>
+          <a class="nav-link" href="{% url 'persona_list_fnc' %}" tabindex="-1" aria-disabled="true">Personas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/adopcion/persona/list/" tabindex="-1" aria-disabled="true">Personas CBV</a>
-        </li>
-
-
-
-        <li class="nav-item">
-          <a class="nav-link" href="/mascota/vacuna/fnc/list/" tabindex="-1" aria-disabled="true">Vacunas</a>
+          <a class="nav-link" href="{% url 'persona_list_cbv' %}" tabindex="-1" aria-disabled="true">Personas CBV</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/mascota/vacuna/list/" tabindex="-1" aria-disabled="true">Vacunas CBV</a>
+          <a class="nav-link" href="{% url 'persona_list_api' %}" tabindex="-1" aria-disabled="true">Personas API</a>
         </li>
 
 
 
         <li class="nav-item">
-          <a class="nav-link" href="/mascota/mascota/fnc/list/" tabindex="-1" aria-disabled="true">Mascotas</a>
+          <a class="nav-link" href="{% url 'vacuna_list_fnc' %}" tabindex="-1" aria-disabled="true">Vacunas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/mascota/mascota/list/" tabindex="-1" aria-disabled="true">Mascotas CBV</a>
+          <a class="nav-link" href="{% url 'vacuna_list_cbv' %}" tabindex="-1" aria-disabled="true">Vacunas CBV</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'vacuna_list_api' %}" tabindex="-1" aria-disabled="true">Vacunas API</a>
+        </li>
+
+
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mascota_list_fnc' %}" tabindex="-1" aria-disabled="true">Mascotas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mascota_list_cbv' %}" tabindex="-1" aria-disabled="true">Mascotas CBV</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mascota_list_api' %}" tabindex="-1" aria-disabled="true">Mascotas API</a>
         </li>
       </ul>
     </div>

@@ -7,7 +7,7 @@
 
     <div class="bibl-table">
         <div class="bibl-table-header">
-            <a href="/adopcion/persona/{{ code }}new/">
+            <a href="{% url create_url %}">
                 <button type="button" class="btn btn-success"> Crear Persona</button>
             </a>
             {% if buscador %}
@@ -38,8 +38,8 @@
                         <td>{{ data.telefono }}</td>
                         <td>{{ data.email }}</td>
                         <td>{{ data.domicilio }}</td>
-                        <td><a href="/adopcion/persona/{{ code }}edit/{{ data.id }}" class="btn btn-secondary">Editar</a></td>
-                        <td><a href="/adopcion/persona/{{ code }}delete/{{ data.id }}" class="btn btn-danger">Borrar</a></td>
+                        <td><a href="{% url edit_url data.id %}" class="btn btn-secondary">Editar</a></td>
+                        <td><a href="{% url delete_url data.id %}" class="btn btn-danger">Borrar</a></td>
                     </tr>{% endfor %} 
                 </tbody>
             </table>
