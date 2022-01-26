@@ -18,12 +18,6 @@ class MascotaSerializer(serializers.ModelSerializer):
         model = Mascota
         fields = '__all__'
 
-    def update(self, instance, validated_data):
-        return super(MascotaSerializer).update(instance, validated_data)
-
-    def create(self, validated_data):
-        return super(MascotaSerializer).update(validated_data)
-
 
 class EditMascotaSerializer(serializers.Serializer):
     nombre = serializers.CharField(
