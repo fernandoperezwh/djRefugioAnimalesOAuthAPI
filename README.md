@@ -15,5 +15,6 @@ Practica del curso gratuito de Django de codigo facilito
 - Ejecutar la aplicación con: ```python manage.py runserver```
 
 # Changelog
+ - v0.2.1 Se elimina codigo innecesario en los ModelSerializer de Vacuna y Persona
  - v0.2.0 Integracion de Django REST Framework, se libera la api de djRefugioAnimales
  - v0.1.0 Curso de Capacitación para aprender Django

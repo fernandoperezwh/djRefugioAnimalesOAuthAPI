@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 # local packages
 from apps.adopcion.models import Persona
 from apps.mascota.models import Vacuna, Mascota
-from apps.adopcion.serializers import PersonaSerializer, EditPersonaSerializer
-from apps.mascota.serializers import VacunaSerializer, EditVacunaSerializer, MascotaSerializer, EditMascotaSerializer
+from apps.adopcion.serializers import PersonaSerializer
+from apps.mascota.serializers import VacunaSerializer, MascotaSerializer, EditMascotaSerializer
 
 
 # region Persona views
@@ -26,7 +26,7 @@ class PersonaList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = EditPersonaSerializer(data=request.data)
+        serializer = PersonaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -46,7 +46,7 @@ class PersonaDetail(APIView):
 
     def put(self, request, pk):
         instance = self.get_object(pk)
-        serializer = EditPersonaSerializer(instance, data=request.data)
+        serializer = PersonaSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -69,7 +69,7 @@ class VacunaList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = EditVacunaSerializer(data=request.data)
+        serializer = VacunaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -89,7 +89,7 @@ class VacunaDetail(APIView):
 
     def put(self, request, pk):
         instance = self.get_object(pk)
-        serializer = EditVacunaSerializer(instance, data=request.data)
+        serializer = VacunaSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
