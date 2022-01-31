@@ -1,5 +1,7 @@
-# Django Refugio de animales
-Practica del curso gratuito de Django de codigo facilito
+# djRefugioAnimalesAPIOAuth
+Repositorio de prueba que implementa una API REST utilizando autentificacion por OAuth.
+
+Esta API es consumida por un segundo proyecto de Django llamada [djRefugioAnimalesClient](https://github.com/fernandoperezwh/djRefugioAnimalesClient)
 
 
 # Instalación
@@ -15,6 +17,7 @@ Practica del curso gratuito de Django de codigo facilito
 - Ejecutar la aplicación con: ```python manage.py runserver```
 
 # Changelog
+ - v0.3.0 Se renueva el tipo de autentirficacion habilitado el uso del protocolo OAuth
  - v0.2.1 Se elimina codigo innecesario en los ModelSerializer de Vacuna y Persona
  - v0.2.0 Integracion de Django REST Framework, se libera la api de djRefugioAnimales
  - v0.1.0 Curso de Capacitación para aprender Django

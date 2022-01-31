@@ -16,8 +16,6 @@ Including another URLconf
 # django packages
 from django.conf.urls import include, url
 from django.contrib import admin
-# third party packages
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 # local packages
 from apps.mascota.views import MascotaListView
 
@@ -27,9 +25,7 @@ urlpatterns = [
     # endregion
 
     # region third party urls
-    url(r'^api/auth/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    url(r'^api/auth/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
-    url(r'^api/auth/verify/$', TokenVerifyView.as_view(), name='token_verify'),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # endregion
 
     # region local urls
