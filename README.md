@@ -1,6 +1,6 @@
 # djRefugioAnimalesOAuthAPI
 
-Aplicación cliente del proyecto [djRefugioAnimalesOAuthClient](https://github.com/fernandoperezwh/djRefugioAnimalesOAuthClient), es necesario ejecutar ambos proyectos para su correcto funcionamiento.
+Aplicación servidor del proyecto [djRefugioAnimalesOAuthClient](https://github.com/fernandoperezwh/djRefugioAnimalesOAuthClient), es necesario ejecutar ambos proyectos para su correcto funcionamiento.
 
 En este proyecto se implementa la autentificación por OAuth 2.0
 
