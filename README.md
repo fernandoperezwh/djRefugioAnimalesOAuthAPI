@@ -1,23 +1,47 @@
-# djRefugioAnimalesAPIOAuth
-Repositorio de prueba que implementa una API REST utilizando autentificacion por OAuth.
+# djRefugioAnimalesOAuthAPI
 
-Esta API es consumida por un segundo proyecto de Django llamada [djRefugioAnimalesClient](https://github.com/fernandoperezwh/djRefugioAnimalesClient)
+Aplicación cliente del proyecto [djRefugioAnimalesOAuthClient](https://github.com/fernandoperezwh/djRefugioAnimalesOAuthClient), es necesario ejecutar ambos proyectos para su correcto funcionamiento.
+
+En este proyecto se implementa la autentificación por OAuth 2.0
 
 
 # Instalación
-- Crear un entorno virtual con: ```mkvirtualenv <env_name>```
-- Activar el entorno con:
-    - Opción 1 -  ```workon <env_name>```
-    - Opción 2  - ```source ./<env_path>/bin/activate```
-- Instalar las dependencias con: ```pip install -r requirements.txt```
+- Elegir una directorio de facil acceso para clonar el proyecto. 
+    ```bash
+    cd ~/Escritorio/
+    ```
+- Clonar el proyecto ya sea por ssh o https
+    ```bash
+    # Clone via ssh
+    git clone git@github.com:fernandoperezwh/djRefugioAnimalesOAuthAPI.git
+    # Clone via https
+    git clone https://github.com/fernandoperezwh/djRefugioAnimalesOAuthAPI.git
+    ```
+- Crear un entorno virtual utilizando python 2.7
+    ```bash
+    mkvirtualenv djRefugioAnimalesOAuthAPI -p=2.7
+    ```
+- Activar el entorno creado en el anterior paso
+    ```bash
+    workon djRefugioAnimalesOAuthAPI
+    ```
+- Instalar las dependencias del archivo `requirements.txt` 
+    ```bash
+    pip install -r requirements.txt
+    ```
+- Realizar las migraciones del proyecto 
+    ```bash 
+    python manage.py migrate
+    ```
+- Opcionalmente puede crear un nuevo super usuario con el siguiente comando
+    ```bash
+    python manage.py createsuperuser
+    ```    
+    Igualmente puede usar las siguientes credenciales de un superusuario de prueba existente
+    - user: `fernando`
+    - passwd: `fernando123`
 
-# Uso
-- Realizar las migraciones con: ```python manage.py migrate```
-- Crear super user con: ```python manage.py createsuperuser```
-- Ejecutar la aplicación con: ```python manage.py runserver```
-
-# Changelog
- - v0.3.0 Se renueva el tipo de autentirficacion habilitado el uso del protocolo OAuth
- - v0.2.1 Se elimina codigo innecesario en los ModelSerializer de Vacuna y Persona
- - v0.2.0 Integracion de Django REST Framework, se libera la api de djRefugioAnimales
- - v0.1.0 Curso de Capacitación para aprender Django
+- Finalmente, ejecute el proyecto
+    ```bash
+    python manage.py runserver
+    ```
