@@ -25,7 +25,7 @@ urlpatterns = [
     # endregion
 
     # region third party urls
-    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    url(r'^api/auth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # endregion
 
     # region local urls
