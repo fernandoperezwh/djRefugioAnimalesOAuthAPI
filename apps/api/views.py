@@ -2,6 +2,7 @@
 from django.db.models import Q
 from django.http import Http404
 # django rest framework packages
+from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,6 +11,19 @@ from apps.adopcion.models import Persona
 from apps.mascota.models import Vacuna, Mascota
 from apps.adopcion.serializers import PersonaSerializer
 from apps.mascota.serializers import VacunaSerializer, MascotaSerializer, EditMascotaSerializer
+
+
+def home(request):
+    access_token, refresh_token = None, None
+    if request.method == 'POST' and request.user.is_authenticated:
+        pass
+        # refresh = RefreshToken.for_user(request.user)
+        # access_token, refresh_token = str(refresh.access_token), str(refresh)
+
+    return render(request, 'index.html', {
+        'user_access_token': access_token,
+        'user_refresh_token': refresh_token,
+    })
 
 
 # region Persona views
