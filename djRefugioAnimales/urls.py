@@ -17,21 +17,19 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 # local packages
-from apps.mascota.views import MascotaListView
+from apps.api.views import home
 
 urlpatterns = [
     # region django urls
     url(r'^admin/', include(admin.site.urls)),
     # endregion
-
     # region third party urls
-    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    url(r'^api/auth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # endregion
-
     # region local urls
-    url(r'^$', MascotaListView.as_view()),
-    url(r'^adopcion/',include('apps.adopcion.urls')),
-    url(r'^mascota/',include('apps.mascota.urls')),
+    url(r'^$', home, name='home'),
+    url(r'^a/', include('apps.adopcion.urls')),
+    url(r'^m/', include('apps.mascota.urls')),
     url(r'^api/', include('apps.api.urls'))
     # endregion
 ]

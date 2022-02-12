@@ -15,21 +15,12 @@ def build_form_input_attrs(key):
     }
 
 
-def generic_delete(request, instance, tpl_name, redirect, success_message=None):
-    DEFAULT_SUCCESS_MESSAGE = "Se elimino el registro correctamente."
-    if request.method == "POST":
-        instance.delete()
-        messages.success(request, success_message or DEFAULT_SUCCESS_MESSAGE)
-        return HttpResponseRedirect( redirect )
-    return render(request, tpl_name, { "object": instance, 'redirect': redirect })
-
-
 def generic_api_delete(request, endpoint, instance, tpl_name, redirect, custom_messages={}):
     DEFAULT_SUCCESS_MESSAGE = "Se elimino el registro correctamente."
     DEFAULT_SERVER_CONNECTION_ERROR = 'Un error ha ocurrido intentando conectar con el servidor'
     if request.method == "POST":
         try:
-            response = requests.delete(endpoint)
+            response = requests.delete(endpoint, cookies=request.COOKIES)
         except (ConnectionError, ConnectTimeout) as err:
             messages.error(request, DEFAULT_SERVER_CONNECTION_ERROR)
             return HttpResponseRedirect(redirect)

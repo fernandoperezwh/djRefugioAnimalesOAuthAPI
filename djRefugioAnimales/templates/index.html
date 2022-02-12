@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Home djRefugioAnimalesOAuthAPI{% endblock %}
+
+{% block content %}
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img width="40" height="32" src="https://cdn.worldvectorlogo.com/logos/django.svg" alt="Django logo vector">
+            <span class="fs-4">djRefugioAnimalesOAuthAPI</span>
+        </a>
+    </header>
+
+    <main>
+        <h1>Probando Django REST Framework con OAuth 2.0</h1>
+        <p class="fs-5 col-md-8">
+            Este proyecto provee una API de Refugio de Animales cuya autentificación se realiza por el
+            <strong>OAuth 2.0</strong> que menciona la
+            <a href="https://www.django-rest-framework.org/api-guide/authentication/#django-oauth-toolkit">
+                documentación de Django REST Framework.
+            </a>
+        </p>
+
+        <p class="fs-5 col-md-8">Este proyecto soporta dos tipos de autentificación</p>
+        <ul class="icon-list">
+            <li>Session Authentication</li>
+            <li>Open Authentication 2.0</li>
+        </ul>
+
+        <hr class="col-8 col-md-8 mb-8">
+
+        <div class="row g-5">
+            <div class="col-md-8">
+                <h2>OAuth 2.0</h2>
+                <p>
+                    Puede utilizar la API de este proyecto consultando desde un proyecto que representa un cliente externo llamado:
+                    <strong><a href="https://github.com/fernandoperezwh/djRefugioAnimalesClient">djRefugioAnimalesClient</a></strong>.
+                </p>
+                <p>
+                    Para hacer las peticiones a la API va a requerir autentificarse mediante un Access Token. El cual puede adquirir desde
+                    el <strong>cliente djRefugioAnimalesClient</strong> especificando el client_id y el client_secret.
+                </p>
+                {% if not user.is_authenticated %}
+                    <strong>
+                        Inicie sesión para consultar la lista de aplicaciones registradas y obtener el
+                        <code>client_id</code> y <code>cliente_secret</code> de su aplicación.
+                    </strong>
+                {% else %}
+                    Obtenga su <code>client_id</code> y <code>cliente_secret</code> de su aplicación consultando la
+                    <a href="{% url 'oauth2_provider:list' %}">lista de aplicaciones registradas</a>.
+                {% endif %}
+                <hr>
+                <small>
+                    Acuda al archivo README para obtener información más detallada de como configurar el projecto cliente
+                    <strong><a href="https://github.com/fernandoperezwh/djRefugioAnimalesClient/blob/master/README.md">djRefugioAnimalesClient</a></strong>.
+                </small>
+            </div>
+            <div class="col-md-4">
+                <span class="badge bg-danger">Failed</span>
+                <h2>Session Authentication</h2>
+                {% if not user.is_authenticated %}
+                    <p>
+                        Las rutas del menu superior se encuentra protegidas y solo puede acceder al recurso si inicia sesión desde el
+                        <a href="{% url 'admin:index' %}">Admin de Django.</a>
+                    </p>
+
+                    <small>
+                        Cree un nuevo usuario ejecutando el comando: <code>python manage.py createsuperuser</code>. <br>
+                        O inicie sesión con uno ya existente.
+                    </small>
+                {% else %}
+                    Bienvenido/bienvenida {{ user.username }}, ahora podra navegar entre las rutas protegidas del menu superior.
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+
+    <footer class="pt-5 my-5 text-muted border-top"></footer>
+</div>
+
+{% endblock  %}
+
