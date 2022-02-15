@@ -135,6 +135,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'api.OAuthApplication'
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {
