@@ -16,6 +16,7 @@ Including another URLconf
 # django packages
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views.generic import TemplateView
 # local packages
 from apps.api.views import home
 
@@ -28,6 +29,7 @@ urlpatterns = [
     # endregion
     # region local urls
     url(r'^$', home, name='home'),
+    url(r'^pros-and-cons$', TemplateView.as_view(template_name='pros-and-cons.html'), name='pros_and_cons'),
     url(r'^a/', include('apps.adopcion.urls')),
     url(r'^m/', include('apps.mascota.urls')),
     url(r'^api/', include('apps.api.urls'))

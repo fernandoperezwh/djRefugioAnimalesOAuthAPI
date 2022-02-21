@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Ventajas y desventajas de OAuth 2.0{% endblock %}
+
+{% block content %}
+<style>
+main li {
+    margin-bottom: 35px;
+}
+</style>
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img width="40" height="32" src="https://cdn.worldvectorlogo.com/logos/django.svg" alt="Django logo vector">
+            <span class="fs-4">Ventajas y desventajas de OAuth 2.0</span>
+        </a>
+    </header>
+
+    <main>
+        <div class="row g-5">
+            <div class="col-md-6">
+                <h2>Ventajas</h2>
+                <ul>
+                    <li>
+                        Los tokens de acceso se vinculan a scopes particulares, lo que restringe los tipos de
+                        operaciones y datos a los que puede acceder la aplicación.
+                    </li>
+                    <li>
+                        Los tokens de acceso caducan o se pueden revocar por lo que los efectos negativos podrían
+                        tener un impacto limitado.
+                    </li>
+                    <li>
+                        Se tienen dos llaves <code>client_id</code> y <code>client_secret</code> que se obtiene al
+                        registrar una nueva aplicación desde el dashboard de desarrolladores.
+                        Estas se usan en lugar de usuario y contraseña para no comprometerlas.
+                    </li>
+                    <li>
+                        Podemos mejorar la experiencia del usuario con el mismo OAuth usando el authorization code.
+                        El usuario final es redirigido y solo debe dar clic a un botón para autorizar.
+                    </li>
+                    <li>
+                        Da soporte a diferentes escenarios de negocio dependiendo del tipo de consumidor que accede
+                        a los datos que expone la API.
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h2>Desventajas</h2>
+                <ul>
+                    <li>
+                        Podria decirse que es extendido el paso para obtener un token de accesso. Sin embargo esto lo
+                        hace mas seguro.
+                        <br>
+                        El flujo mas simple (Client credentials) requiere un paso extra, el cual es hacer el encode
+                        en base64 de `<code>client_id</code>:<code>client_secret</code>`.
+                        Con Api Key, tal cual te la key es la que usaras.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+
+    <footer class="pt-5 my-5 text-muted border-top"></footer>
+</div>
+
+{% endblock  %}
+
